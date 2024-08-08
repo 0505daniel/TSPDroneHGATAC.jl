@@ -318,7 +318,7 @@ function perform_genetic_algorithm(TT::Matrix{Float64}, DD::Matrix{Float64}, dEl
     end
     t2 = time()
 
-    println("The best objective achieved in ", Gen_num, " generations is: ", round(best_objective(population), digits=2), " and it took ", round(t2 - t1, digits=2), " seconds.")
+    # println("The best objective achieved in ", Gen_num, " generations is: ", round(best_objective(population), digits=2), " and it took ", round(t2 - t1, digits=2), " seconds.")
 
     return population
 end
@@ -343,7 +343,7 @@ function run_GA(problem_type::ProblemType, num_runs::Int64, T::Matrix{Float64}, 
     @inbounds for i in 1:num_runs
         initial_chrm = build_Initial_chromosome(T, D, n_nodes, flying_range, sR, sL)
         t1 = time()
-        println("Run ", i, ":")
+        # println("Run ", i, ":")
         P = perform_genetic_algorithm(T, D, drone_ineligible_nodes, h, popsize, k_tournament, targetFeasible, sR, sL,
             num_generations, flying_range, initial_chrm, problem_type)
         t2 = time()
@@ -351,9 +351,14 @@ function run_GA(problem_type::ProblemType, num_runs::Int64, T::Matrix{Float64}, 
         Route.run_time = t2 - t1
         push!(routes, Route)
 
+        # Check if total time has exceeded 3600 seconds
+        if time() - start_time > 3600
+            println("Stopped early due to time limit.")
+            break
+        end
     end
 
-    return routes
+    return prepare_return_value(routes)
 end
 
 
