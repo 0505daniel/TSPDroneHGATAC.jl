@@ -16,6 +16,8 @@ end
 
 function Solve_Murray(file_name::String, flying_range::Float64, num_runs::Int64)
     T, D, drone_ineligible_nodes = read_Murray(file_name)
+    @show size(T)
+    @show drone_ineligible_nodes
     return TSPDroneHGATAC.solve_tspd_by_HGA_TAC(FSTSP, num_runs, T, D, drone_ineligible_nodes = drone_ineligible_nodes,
      flying_range = flying_range, sR = 1.0, sL = 1.0)
 end

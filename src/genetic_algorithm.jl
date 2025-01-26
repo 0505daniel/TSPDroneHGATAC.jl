@@ -352,14 +352,17 @@ function run_GA(problem_type::ProblemType, num_runs::Int64, T::Matrix{Float64}, 
         push!(routes, Route)
 
         # Check if total time has exceeded 3600 seconds
-        if time() - start_time > 3600
+        if time() - t1 > 3600
             println("Stopped early due to time limit.")
             break
         end
     end
 
-    return prepare_return_value(routes)
+    # return prepare_return_value(routes) # For benchmarking
+    return routes
 end
+
+
 
 
 

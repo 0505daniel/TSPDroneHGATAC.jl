@@ -110,10 +110,51 @@ function exact_p(initial_tour::Vector{Int64}, Ct::Matrix{Float64}, Cd::Matrix{Fl
     return final_time, c
 end
 
+function fi_fixed_end(chain::Vector{Int}, dis::Matrix{Float64})::Vector{Int}
+    ls = length(chain)
+    @assert length(ls) < 2 "There must be at least two nodes for a valid TSP."
+    
+    remaining = Set(2:ls-1)
+    tour = [1, ls]
+
+    while !isempty(remaining)
+
+        # Selection step
+        farthest, farthest_dist = 0, -1.0
+        @inbounds for city in remaining
+            max_dist_to_tour = maximum([dis[city, tour_city] for tour_city in tour])
+            if max_dist_to_tour > farthest_dist
+                farthest, farthest_dist = city, max_dist_to_tour
+            end
+        end
+        
+        # Insertion step
+        best_insert_pos, best_insert_cost = 0, Inf
+        @inbounds for i in 1:(length(tour)-1)
+            if tour[i] != 0
+                cost_increase = dis[tour[i], farthest] + dis[farthest, tour[i+1]] - dis[tour[i], tour[i+1]]
+                if cost_increase < best_insert_cost
+                    best_insert_pos, best_insert_cost = i, cost_increase
+                end
+            end
+        end
+        
+        insert!(tour, best_insert_pos+1, farthest)
+        delete!(remaining, farthest)
+    end
+    
+    return tour
+end
+
 function build_Initial_chromosome(TT::Matrix{Float64}, DD::Matrix{Float64}, n_nodes::Int64, flying_range::Float64, sR::Float64, sL::Float64)
-    tour = find_initial_TSP_tour(TT, n_nodes)
-    pushfirst!(tour, 1)
-    push!(tour, n_nodes + 2)
+    # tour = find_initial_TSP_tour(TT, n_nodes)
+    # @show tour
+    # pushfirst!(tour, 1)
+    # push!(tour, n_nodes + 2)
+    # @show tour
+
+    tour = fi_fixed_end(zeros(Int, n_nodes+2), TT)
+    # @show tour
     f, c = exact_p(tour, TT, DD, flying_range, sR, sL)
     deleteat!(c, [1, n_nodes + 2])
     return c

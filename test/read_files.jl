@@ -87,9 +87,9 @@ end
 
 function read_Murray(file_name::String)
     n_nodes = 10
-    filename = joinpath(@__DIR__, "Test_instances/FSTSP-Instances-Murray/FSTSP_10_customer_problems/$(file_name)/tau.csv")
+    filename = joinpath(@__DIR__, "Test_Instances/FSTSP-Instances-Murray/FSTSP_10_customer_problems/$(file_name)/tau.csv")
     T = readdlm(filename, header=false, ',')
-    filename = joinpath(@__DIR__, "Test_instances/FSTSP-Instances-Murray/FSTSP_10_customer_problems/$(file_name)/tauprime.csv")
+    filename = joinpath(@__DIR__, "Test_Instances/FSTSP-Instances-Murray/FSTSP_10_customer_problems/$(file_name)/tauprime.csv")
     D = readdlm(filename, header=false, ',')
     TT = zeros(n_nodes + 2, n_nodes + 2)
     DD = zeros(n_nodes + 2, n_nodes + 2)
@@ -104,7 +104,7 @@ function read_Murray(file_name::String)
             end
         end
     end
-    filename = joinpath(@__DIR__, "Test_instances/FSTSP-Instances-Murray/FSTSP_10_customer_problems/$(file_name)/nodes.csv")
+    filename = joinpath(@__DIR__, "Test_Instances/FSTSP-Instances-Murray/FSTSP_10_customer_problems/$(file_name)/nodes.csv")
     d = readdlm(filename, header=false, ',')
     dEligible = Int[]
     for i = 0:10
