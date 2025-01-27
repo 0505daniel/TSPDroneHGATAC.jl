@@ -46,7 +46,7 @@ function solve_tspd_by_HGA_TAC_fixed_end(
     sL::Float64=0.0
 )
 
-    problem_type = ProblemType.TSPD
+    problem_type = TSPD
 
-    return run_GA(tsp_function, problem_type, num_runs, T, D, flying_range, sR, sL, drone_ineligible_nodes)
+    return run_GA_fixed_end(tsp_function, problem_type, num_runs, T, D, flying_range, sR, sL, drone_ineligible_nodes)
 end

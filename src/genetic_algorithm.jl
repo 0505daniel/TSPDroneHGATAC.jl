@@ -359,9 +359,9 @@ end
 function run_GA_fixed_end(tsp_function::Function, problem_type::ProblemType, num_runs::Int64, T::Matrix{Float64}, D::Matrix{Float64},
     flying_range::Float64, sR::Float64, sL::Float64, drone_ineligible_nodes::Vector{Int})
 
-    problem_type = ProblemType.TSPD
-
     n_nodes = size(T)[1] - 2
+    # @show n_nodes
+
     if flying_range >= maximum(sum(sort(D, dims=2, rev=true)[:, 1:2], dims=2))
         flying_range = Inf
     end
