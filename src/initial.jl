@@ -147,13 +147,17 @@ function fi_fixed_end(chain::Vector{Int}, dis::Matrix{Float64})::Vector{Int}
 end
 
 function build_Initial_chromosome(TT::Matrix{Float64}, DD::Matrix{Float64}, n_nodes::Int64, flying_range::Float64, sR::Float64, sL::Float64)
-    # tour = find_initial_TSP_tour(TT, n_nodes)
-    # @show tour
-    # pushfirst!(tour, 1)
-    # push!(tour, n_nodes + 2)
-    # @show tour
+    tour = find_initial_TSP_tour(TT, n_nodes)
+    pushfirst!(tour, 1)
+    push!(tour, n_nodes + 2)
+    f, c = exact_p(tour, TT, DD, flying_range, sR, sL)
+    deleteat!(c, [1, n_nodes + 2])
+    return c
+end
 
-    tour = fi_fixed_end(zeros(Int, n_nodes+2), TT)
+function build_Initial_chromosome_fixed_end(tsp_function::Function, TT::Matrix{Float64}, DD::Matrix{Float64}, n_nodes::Int64, flying_range::Float64, sR::Float64, sL::Float64)
+
+    tour = tsp_function(zeros(Int, n_nodes+2), TT)
     # @show tour
     f, c = exact_p(tour, TT, DD, flying_range, sR, sL)
     deleteat!(c, [1, n_nodes + 2])

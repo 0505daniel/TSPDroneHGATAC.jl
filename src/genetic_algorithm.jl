@@ -343,7 +343,7 @@ function run_GA(problem_type::ProblemType, num_runs::Int64, T::Matrix{Float64}, 
     @inbounds for i in 1:num_runs
         initial_chrm = build_Initial_chromosome(T, D, n_nodes, flying_range, sR, sL)
         t1 = time()
-        # println("Run ", i, ":")
+        println("Run ", i, ":")
         P = perform_genetic_algorithm(T, D, drone_ineligible_nodes, h, popsize, k_tournament, targetFeasible, sR, sL,
             num_generations, flying_range, initial_chrm, problem_type)
         t2 = time()
@@ -351,18 +351,44 @@ function run_GA(problem_type::ProblemType, num_runs::Int64, T::Matrix{Float64}, 
         Route.run_time = t2 - t1
         push!(routes, Route)
 
-        # Check if total time has exceeded 3600 seconds
-        if time() - t1 > 3600
-            println("Stopped early due to time limit.")
-            break
-        end
+    end
+
+    return routes
+end
+
+function run_GA_fixed_end(tsp_function::Function, problem_type::ProblemType, num_runs::Int64, T::Matrix{Float64}, D::Matrix{Float64},
+    flying_range::Float64, sR::Float64, sL::Float64, drone_ineligible_nodes::Vector{Int})
+
+    problem_type = ProblemType.TSPD
+
+    n_nodes = size(T)[1] - 2
+    if flying_range >= maximum(sum(sort(D, dims=2, rev=true)[:, 1:2], dims=2))
+        flying_range = Inf
+    end
+    #GA Parameters
+    popsize = (15, 25)  #(mu,sigma)
+    k_tournament = 5
+    targetFeasible = 0.2
+    h = 0.3
+    num_generations = 2500
+
+    routes = TSPD_Route[]
+
+    @inbounds for i in 1:num_runs
+        initial_chrm = build_Initial_chromosome_fixed_end(tsp_function, T, D, n_nodes, flying_range, sR, sL)
+        t1 = time()
+        # println("Run ", i, ":")
+        P = perform_genetic_algorithm(T, D, drone_ineligible_nodes, h, popsize, k_tournament, targetFeasible, sR, sL,
+            num_generations, flying_range, initial_chrm, problem_type)
+        t2 = time()
+        Route = return_best_route(P)
+        Route.run_time = t2 - t1
+        push!(routes, Route)
     end
 
     # return prepare_return_value(routes) # For benchmarking
     return routes
 end
-
-
 
 
 

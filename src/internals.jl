@@ -34,3 +34,19 @@ function solve_tspd_by_HGA_TAC(
 
     return run_GA(problem_type, num_runs, T, D, flying_range, sR, sL, drone_ineligible_nodes)
 end
+
+function solve_tspd_by_HGA_TAC_fixed_end(
+    tsp_function::Function,
+    num_runs::Int64,
+    T::Matrix{Float64},
+    D::Matrix{Float64};
+    drone_ineligible_nodes::Vector{Int}=Int[],
+    flying_range::Float64=Inf,
+    sR::Float64=0.0,
+    sL::Float64=0.0
+)
+
+    problem_type = ProblemType.TSPD
+
+    return run_GA(tsp_function, problem_type, num_runs, T, D, flying_range, sR, sL, drone_ineligible_nodes)
+end
