@@ -343,7 +343,7 @@ function run_GA(problem_type::ProblemType, num_runs::Int64, T::Matrix{Float64}, 
     @inbounds for i in 1:num_runs
         initial_chrm = build_Initial_chromosome(T, D, n_nodes, flying_range, sR, sL)
         t1 = time()
-        println("Run ", i, ":")
+        # println("Run ", i, ":")
         P = perform_genetic_algorithm(T, D, drone_ineligible_nodes, h, popsize, k_tournament, targetFeasible, sR, sL,
             num_generations, flying_range, initial_chrm, problem_type)
         t2 = time()
@@ -353,7 +353,7 @@ function run_GA(problem_type::ProblemType, num_runs::Int64, T::Matrix{Float64}, 
 
     end
 
-    return routes
+    return prepare_return_value(routes)
 end
 
 function run_GA_fixed_end(tsp_function::Function, problem_type::ProblemType, num_runs::Int64, T::Matrix{Float64}, D::Matrix{Float64},

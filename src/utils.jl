@@ -27,23 +27,24 @@ mutable struct HybridGeneticAlgorithmResult
 end
 
 
-function prepare_return_value(routes::Vector{TSPD_Route})
-    best_index = argmin([routes[i].total_cost for i in 1:length(routes)])
-    result = HybridGeneticAlgorithmResult(
-        routes[best_index].total_cost,
-        routes[best_index].Truck_Route,
-        routes[best_index].Drone_Route,
-        routes
-    )
-    return result
-end
+# function prepare_return_value(routes::Vector{TSPD_Route})
+#     best_index = argmin([routes[i].total_cost for i in 1:length(routes)])
+#     result = HybridGeneticAlgorithmResult(
+#         routes[best_index].total_cost,
+#         routes[best_index].Truck_Route,
+#         routes[best_index].Drone_Route,
+#         routes
+#     )
+#     return result
+# end
 
 # For benchmarking
-# function prepare_return_value(routes::Vector{TSPD_Route})
-#     total_cost_sum = sum([routes[i].total_cost for i in 1:length(routes)])
-#     average_total_cost = total_cost_sum / length(routes)
-#     return average_total_cost
-# end
+function prepare_return_value(routes::Vector{TSPD_Route})
+    best_cost = minimum([routes[i].total_cost for i in 1:length(routes)])
+    total_cost_sum = sum([routes[i].total_cost for i in 1:length(routes)])
+    average_total_cost = total_cost_sum / length(routes)
+    return best_cost, average_total_cost
+end
 
 function cost_matrices_with_dummy(truck_cost_mtx, drone_cost_mtx)
     Ct = [
